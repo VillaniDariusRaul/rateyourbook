@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.rateyourmusic"
+    namespace = "com.example.rateyourbook"
     compileSdk {
         version = release(36) {
             minorApiLevel = 1
