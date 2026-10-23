@@ -1,4 +1,4 @@
-package com.example.rateyourmusic.ui.theme
+package com.example.rateyourbook.ui.theme
 
 import androidx.compose.ui.graphics.Color
 

@@ -1,4 +1,4 @@
-package com.example.rateyourmusic
+package com.example.rateyourbook
 
 import org.junit.Test
 
