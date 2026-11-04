@@ -1,18 +1,54 @@
 package com.example.rateyourbook.ui.home
 
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Notifications
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.example.rateyourbook.data.Book
+import com.example.rateyourbook.ui.theme.SeafoamGreen
+import com.example.rateyourbook.ui.theme.SeafoamGreenLight
+import com.example.rateyourbook.ui.theme.OnSeafoamGreen
+import com.example.rateyourbook.ui.theme.SearchPink
+import com.example.rateyourbook.ui.theme.BackgroundPink
+import com.example.rateyourbook.ui.theme.BookCardPink
+import androidx.compose.foundation.layout.fillMaxSize
+import com.example.rateyourbook.ui.theme.ButtonPink
 
 @Composable
 fun HomeScreen(
@@ -20,17 +56,123 @@ fun HomeScreen(
     onBookClick: (Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    LazyColumn(modifier = modifier) {
-        items(books) { book ->
-            Card(
+    var query by remember { mutableStateOf("") }
+
+    Box(
+        modifier = modifier
+            .fillMaxSize()
+            .background(BackgroundPink)
+    ) {
+        Column(
+            modifier = Modifier.fillMaxSize()
+        ) {
+        // Bara de sus: cu colțuri rotunjite jos
+        Surface(
+            color = SeafoamGreen,
+            shape = RoundedCornerShape(bottomStart = 28.dp, bottomEnd = 28.dp)
+        ) {
+            Row(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(8.dp)
-                    .clickable { onBookClick(book.id) }
+                    .statusBarsPadding()
+                    .padding(horizontal = 16.dp, vertical = 12.dp),
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Column(Modifier.padding(16.dp)) {
-                    Text(book.title, style = MaterialTheme.typography.titleLarge)
-                    Text(book.author)
+                TextField(
+                    value = query,
+                    onValueChange = { query = it },
+                    modifier = Modifier.weight(1f),
+                    placeholder = { Text("Search by title or author") },
+                    leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
+                    singleLine = true,
+                    shape = RoundedCornerShape(28.dp),
+                    colors = TextFieldDefaults.colors(
+                        focusedContainerColor = SearchPink,
+                        unfocusedContainerColor = SearchPink,
+                        focusedIndicatorColor = Color.Transparent,
+                        unfocusedIndicatorColor = Color.Transparent
+                    )
+                )
+                IconButton(onClick = { /* mai târziu: notificări */ }) {
+                    Icon(
+                        Icons.Default.Notifications,
+                        contentDescription = "Notifications",
+                        tint = OnSeafoamGreen
+                    )
+                }
+            }
+        }
+
+        // Lista de cărți
+        LazyColumn(
+            contentPadding = PaddingValues(16.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            items(books, key = { it.id }) { book ->
+                BookItem(
+                    book = book,
+                    onClick = { onBookClick(book.id) },
+                    onAddToList = { /* mai târziu: salvare în listă */ }
+                )
+            }
+        }
+    }}
+}
+
+@Composable
+private fun BookItem(
+    book: Book,
+    onClick: () -> Unit,
+    onAddToList: () -> Unit
+) {
+    Card(
+        onClick = onClick,
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(130.dp),
+        shape = RoundedCornerShape(20.dp),
+        colors = CardDefaults.cardColors(containerColor = SeafoamGreenLight)
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxHeight()
+                .padding(10.dp)
+        ) {
+            // Loc pentru copertă (se înlocuiește cu imaginea din API)
+            Box(
+                modifier = Modifier
+                    .width(80.dp)
+                    .fillMaxHeight()
+                    .clip(RoundedCornerShape(14.dp))
+                    .background(SeafoamGreen)
+            )
+
+            Spacer(Modifier.width(14.dp))
+
+            Column(
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxHeight(),
+                verticalArrangement = Arrangement.SpaceBetween
+            ) {
+                Column {
+                    Text(
+                        book.title,
+                        style = MaterialTheme.typography.titleMedium,
+                        maxLines = 2,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                    Text(
+                        "by ${book.author}",
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                }
+                Button(
+                    onClick = onAddToList,
+                    shape = RoundedCornerShape(20.dp),
+                    contentPadding = PaddingValues(horizontal = 16.dp, vertical = 0.dp),
+                    modifier = Modifier.height(36.dp)
+                ) {
+                    Text("Add to list")
                 }
             }
         }
