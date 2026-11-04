@@ -54,6 +54,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.height
+import com.example.rateyourbook.ui.components.AppTopBar
 
 @Composable
 fun HomeScreen(
@@ -72,40 +73,7 @@ fun HomeScreen(
             modifier = Modifier.fillMaxSize()
         ) {
         // Bara de sus: cu colțuri rotunjite jos
-        Surface(
-            color = SeafoamGreen,
-            shape = RoundedCornerShape(bottomStart = 28.dp, bottomEnd = 28.dp)
-        ) {
-            Row(
-                modifier = Modifier
-                    .statusBarsPadding()
-                    .padding(horizontal = 16.dp, vertical = 12.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                TextField(
-                    value = query,
-                    onValueChange = { query = it },
-                    modifier = Modifier.weight(1f),
-                    placeholder = { Text("Search by title or author") },
-                    leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
-                    singleLine = true,
-                    shape = RoundedCornerShape(28.dp),
-                    colors = TextFieldDefaults.colors(
-                        focusedContainerColor = SearchPink,
-                        unfocusedContainerColor = SearchPink,
-                        focusedIndicatorColor = Color.Transparent,
-                        unfocusedIndicatorColor = Color.Transparent
-                    )
-                )
-                IconButton(onClick = { /* mai târziu: notificări */ }) {
-                    Icon(
-                        Icons.Default.Notifications,
-                        contentDescription = "Notifications",
-                        tint = OnSeafoamGreen
-                    )
-                }
-            }
-        }
+            AppTopBar()
 
         // Lista de cărți
         LazyColumn(

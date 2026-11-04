@@ -18,6 +18,7 @@ import com.example.rateyourbook.ui.components.Tab
 import com.example.rateyourbook.ui.home.HomeScreen
 import com.example.rateyourbook.ui.theme.RateyourbookTheme
 import com.example.rateyourbook.ui.theme.BackgroundPink
+import com.example.rateyourbook.ui.details.BookDetailsScreen
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -45,6 +46,11 @@ class MainActivity : ComponentActivity() {
         setContent {
             RateyourbookTheme {
                 var selectedTab by remember { mutableStateOf(Tab.Home) }
+                var selectedBookId by remember { mutableStateOf<Int?>(null) }
+
+                val selectedBook = books.find {
+                    it.id == selectedBookId
+                }
 
                 Scaffold(
                     modifier = Modifier.fillMaxSize(),
@@ -56,13 +62,25 @@ class MainActivity : ComponentActivity() {
                         )
                     }
                 ) { innerPadding ->
-                    HomeScreen(
-                        books = books,
-                        onBookClick = { },
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(bottom = innerPadding.calculateBottomPadding())
-                    )
+
+                    if (selectedBook != null) {
+                        BookDetailsScreen(
+                            book = selectedBook,
+                            onBack = { selectedBookId = null },
+                            onAddToList = { /* salvare în listă mai târziu */ },
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(bottom = innerPadding.calculateBottomPadding())
+                        )
+                    } else {
+                        HomeScreen(
+                            books = books,
+                            onBookClick = { selectedBookId = it },
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(bottom = innerPadding.calculateBottomPadding())
+                        )
+                    }
                 }
             }
         }
