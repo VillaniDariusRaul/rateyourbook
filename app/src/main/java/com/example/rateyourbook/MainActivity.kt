@@ -7,41 +7,82 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import com.example.rateyourbook.data.Book
+import com.example.rateyourbook.ui.components.AppBottomBar
+import com.example.rateyourbook.ui.components.Tab
+import com.example.rateyourbook.ui.home.HomeScreen
 import com.example.rateyourbook.ui.theme.RateyourbookTheme
+import com.example.rateyourbook.ui.theme.BackgroundPink
+import com.example.rateyourbook.ui.details.BookDetailsScreen
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+
+        val books = listOf(
+            Book(
+                1, "1984", "George Orwell",
+                "A dystopian novel about totalitarian surveillance, propaganda and the loss of individual freedom.",
+                R.drawable.book_1984
+            ),
+            Book(
+                2, "Dune", "Frank Herbert",
+                "An epic science fiction story about politics, religion and survival on the desert planet Arrakis.",
+                R.drawable.book_dune
+            ),
+            Book(
+                3, "Demons", "Fyodor Dostoevsky",
+                "A novel about a group of radicals in a provincial Russian town and the destructive power of nihilistic ideas.",
+                R.drawable.book_demons
+            )
+        )
+
         setContent {
             RateyourbookTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
+                var selectedTab by remember { mutableStateOf(Tab.Home) }
+                var selectedBookId by remember { mutableStateOf<Int?>(null) }
+
+                val selectedBook = books.find {
+                    it.id == selectedBookId
+                }
+
+                Scaffold(
+                    modifier = Modifier.fillMaxSize(),
+                    containerColor = BackgroundPink,
+                    bottomBar = {
+                        AppBottomBar(
+                            selected = selectedTab,
+                            onSelect = { selectedTab = it }
+                        )
+                    }
+                ) { innerPadding ->
+
+                    if (selectedBook != null) {
+                        BookDetailsScreen(
+                            book = selectedBook,
+                            onBack = { selectedBookId = null },
+                            onAddToList = { /* salvare în listă mai târziu */ },
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(bottom = innerPadding.calculateBottomPadding())
+                        )
+                    } else {
+                        HomeScreen(
+                            books = books,
+                            onBookClick = { selectedBookId = it },
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(bottom = innerPadding.calculateBottomPadding())
+                        )
+                    }
                 }
             }
         }
-    }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    RateyourbookTheme {
-        Greeting("Android")
     }
 }
