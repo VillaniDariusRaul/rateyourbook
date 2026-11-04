@@ -27,15 +27,18 @@ class MainActivity : ComponentActivity() {
         val books = listOf(
             Book(
                 1, "1984", "George Orwell",
-                "A dystopian novel about totalitarian surveillance, propaganda and the loss of individual freedom."
+                "A dystopian novel about totalitarian surveillance, propaganda and the loss of individual freedom.",
+                R.drawable.book_1984
             ),
             Book(
                 2, "Dune", "Frank Herbert",
-                "An epic science fiction story about politics, religion and survival on the desert planet Arrakis."
+                "An epic science fiction story about politics, religion and survival on the desert planet Arrakis.",
+                R.drawable.book_dune
             ),
             Book(
                 3, "Demons", "Fyodor Dostoevsky",
-                "A novel about a group of radicals in a provincial Russian town and the destructive power of nihilistic ideas."
+                "A novel about a group of radicals in a provincial Russian town and the destructive power of nihilistic ideas.",
+                R.drawable.book_demons
             )
         )
 

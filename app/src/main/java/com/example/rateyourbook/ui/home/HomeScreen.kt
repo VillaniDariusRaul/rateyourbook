@@ -49,6 +49,11 @@ import com.example.rateyourbook.ui.theme.BackgroundPink
 import com.example.rateyourbook.ui.theme.BookCardPink
 import androidx.compose.foundation.layout.fillMaxSize
 import com.example.rateyourbook.ui.theme.ButtonPink
+import androidx.compose.foundation.Image
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.height
 
 @Composable
 fun HomeScreen(
@@ -137,13 +142,13 @@ private fun BookItem(
                 .fillMaxHeight()
                 .padding(10.dp)
         ) {
-            // Loc pentru copertă (se înlocuiește cu imaginea din API)
-            Box(
+            Image(
+                painter = painterResource(id = book.imageRes),
+                contentDescription = book.title,
                 modifier = Modifier
                     .width(80.dp)
-                    .fillMaxHeight()
-                    .clip(RoundedCornerShape(14.dp))
-                    .background(SeafoamGreen)
+                    .fillMaxHeight(),
+                contentScale = ContentScale.Fit
             )
 
             Spacer(Modifier.width(14.dp))
